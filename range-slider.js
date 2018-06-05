@@ -18,7 +18,11 @@ function RS(target, event, vertical) {
         drag = false,
         rangerSize = 0,
         draggerSize = 0,
+	draggerX = 0,
+	draggerY = 0,
         rangerDistance = 0,
+	lastX=0,
+	lastY=0,
         cacheValue = 0,
         vertical = vertical || event.vertical || false,
         size = vertical ? 'offsetHeight' : 'offsetWidth',
@@ -26,7 +30,9 @@ function RS(target, event, vertical) {
         page = vertical ? 'pageY' : 'pageX',
         offset = vertical ? 'offsetTop' : 'offsetLeft',
         client = vertical ? 'clientY' : 'clientX',
-        scroll = vertical ? 'scrollTop' : 'scrollLeft';
+        scroll = vertical ? 'scrollTop' : 'scrollLeft',
+	drag_start_x = 0,
+	drag_start_y = 0;
 
     function isSet(x) {
         return typeof x !== "undefined";
@@ -109,6 +115,8 @@ function RS(target, event, vertical) {
     }
 
     function dragStart(e) {
+	cur_x=draggerX=drag_start_x=(e.clientX-target.offsetLeft);
+	draggerY=drag_start_y=e.clientY;
         setSize(), drag = true, dragUpdate(e);
         on("touchmove", doc, dragMove);
         on("mousemove", doc, dragMove);
@@ -128,18 +136,47 @@ function RS(target, event, vertical) {
         if (isFunc(event.stop)) event.stop(cacheValue, target, e);
         return preventDefault(e);
     }
+    var attenuation_val=1080.0;
 
+
+    var last_x = 0, cur_x = 0;
+    var attenuated=false;
+    var attenuation_threshold=20;
     function dragUpdate(e) {
+	//Figure out
+	cur_x=e.clientX;
+	let total_dist = cur_x - drag_start_x;
+	let dist = cur_x - last_x;
+	let y_dist = Math.abs(e.clientY-target.offsetTop);
+	let move_speed = 1;
+	if(y_dist > attenuation_threshold && !attenuated){
+		attenuated=true;
+		drag_start_x=cur_x;
+	} else if (y_dist<attenuation_threshold && attenuated) {
+		attenuated = false;
+	}
+	if(y_dist > attenuation_threshold && attenuated){
+		move_speed=Math.pow(10/Math.log10(y_dist)/10,2);
+	}
+	//move_speed=Math.pow(10/Math.log10(y_dist)/10,2);
+//	let move_speed = y_dist < 10?1:Math.log10(Math.abs(attenuation_val- (e.clientY-target.offsetTop)))/10;
+	let move_dist = dist*move_speed;
+	draggerX+=move_dist;//(new_pos - (draggerSize / 2));
+
+	let pos = e.touches ? e.touches[0][page] : e[page];
+	let new_pos = (e.clientX-target.offsetLeft-drag_start_x)*move_speed;
+	//console.log("Move by:",move_dist);	
+	console.log("movement speed:",move_speed);
         e = e || win.event;
-        var pos = e.touches ? e.touches[0][page] : e[page],
-            move = edge(pos - rangerDistance, 0, rangerSize),
-            value = edge(((pos - rangerDistance) / rangerSize) * 100, 0, 100);
+        var move = edge(pos - rangerDistance, 0, rangerSize)*move_speed,
+            value = edge((((drag_start_x-target.offsetLeft + total_dist*move_speed)) / rangerSize) * 100, 0, 100);
         if (!pos) pos = e[client] + doc.body[scroll] + doc.documentElement[scroll];
         if (drag) {
-            dragger.style[css] = (move - (draggerSize / 2)) + 'px';
+            dragger.style[css] = (drag_start_x-target.offsetLeft + total_dist*move_speed) + 'px';
             cacheValue = Math.round(value);
             if (isFunc(event.drag)) event.drag(cacheValue, target, e);
         }
+	last_x = cur_x;
     }
 
     on("touchstart", ranger, dragStart);

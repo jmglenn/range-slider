@@ -42,37 +42,21 @@
     </style>
   </head>
   <body style="margin-top:3em;">
-
-    <p style="background:salmon;border-bottom:1px dashed;position:absolute;top:0;right:0;left:0;height:3em;line-height:3em;margin:0;padding:0 1em;">Like this project? Please support my <a href="https://github.com/mecha-cms">Mecha CMS</a> project too. Thank you!</p>
-
     <div class="test-result" id="test-result">
       <span>0%</span>
       <span>0%</span>
     </div>
 
-    <h3>Horizontal Slider</h3>
+    <h3>Attenuated Motion Slider</h3>
     <div id="range-slider-1"></div>
 
-    <h3>Vertical Slider</h3>
-    <div id="range-slider-2"></div>
-
-    <script src="range-slider.min.js"></script>
+    <script src="range-slider.js"></script>
     <script>
-
     var testResult = document.getElementById('test-result').children;
 
     // horizontal range slider
     RS(document.getElementById('range-slider-1'), function(v) {
         testResult[0].innerHTML = v + '%';
-    });
-
-    // vertical range slider
-    RS(document.getElementById('range-slider-2'), {
-        value: 20, // initial value
-        vertical: true,
-        drag: function(v) {
-            testResult[1].innerHTML = v + '%';
-        }
     });
 
     </script>
