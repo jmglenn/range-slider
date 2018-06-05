@@ -1,3 +1,4 @@
+.timelapse-bar {width:auto; height:50px;background-color: #333;padding-top: 25px; }
 .range-slider {margin:0 5px 10px}
 .range-slider-track {
   width:auto;
@@ -5,6 +6,7 @@
   margin:0 auto;
   position:relative;
   cursor:e-resize;
+  background-color:#ade1ed; 
 }
 .range-slider-track:before {
   content:"";
@@ -14,7 +16,7 @@
   left:0;
   width:100%;
   height:2px;
-  background-color:black;
+  background-color:#ade1ed;
 }
 .range-slider-track .dragger {
   display:block;
@@ -22,7 +24,7 @@
   height:inherit;
   position:relative;
   z-index:2;
-  background-color:red;
+  background-color:#3f9cb1;
   cursor:inherit;
   /* opacity:.6; */
 }
