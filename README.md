@@ -3,7 +3,7 @@ Simple Custom Range Slider
 
 > The simplest JavaScript custom range slider ever!
 
-[![View Demo](https://cloud.githubusercontent.com/assets/1669261/17064930/5fd9e440-5069-11e6-9f61-071b0be5bd56.png)](https://rawgit.com/tovic/range-slider/master/range-slider.html "View Demo")
+[![View Demo](https://cloud.githubusercontent.com/assets/1669261/17064930/5fd9e440-5069-11e6-9f61-071b0be5bd56.png)](https://rawgit.com/jmglenn/range-slider/master/index.html "View Demo")
 
 Basic Usage
 -----------
